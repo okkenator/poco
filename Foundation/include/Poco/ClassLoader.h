@@ -22,6 +22,7 @@
 #include "Poco/MetaObject.h"
 #include "Poco/Manifest.h"
 #include "Poco/SharedLibrary.h"
+#include "Poco/SharedLibraryLoader.h"
 #include "Poco/Mutex.h"
 #include "Poco/Exception.h"
 #include <map>
@@ -53,8 +54,6 @@ class ClassLoader
 public:
 	typedef AbstractMetaObject<Base> Meta;
 	typedef Manifest<Base> Manif;
-	typedef void (*InitializeLibraryFunc)();
-	typedef void (*UninitializeLibraryFunc)();
 	typedef bool (*BuildManifestFunc)(ManifestBase*);
 
 	struct LibraryInfo
@@ -161,15 +160,10 @@ public:
 			li.refCount  = 1;
 			try
 			{
-				li.pLibrary  = new SharedLibrary(path);
+				li.pLibrary  = SharedLibraryLoader::instance().loadLibrary(path);
 				li.pManifest = new Manif();
 				std::string pocoBuildManifestSymbol("pocoBuildManifest");
 				pocoBuildManifestSymbol.append(manifest);
-				if (li.pLibrary->hasSymbol("pocoInitializeLibrary"))
-				{
-					InitializeLibraryFunc initializeLibrary = (InitializeLibraryFunc) li.pLibrary->getSymbol("pocoInitializeLibrary");
-					initializeLibrary();
-				}
 				if (li.pLibrary->hasSymbol(pocoBuildManifestSymbol))
 				{
 					BuildManifestFunc buildManifest = (BuildManifestFunc) li.pLibrary->getSymbol(pocoBuildManifestSymbol);
@@ -182,7 +176,7 @@ public:
 			}
 			catch (...)
 			{
-				delete li.pLibrary;
+				SharedLibraryLoader::instance().unloadLibrary(path);
 				delete li.pManifest;
 				throw;
 			}
@@ -227,14 +221,8 @@ public:
 		{
 			if (--it->second.refCount == 0)
 			{
-				if (it->second.pLibrary->hasSymbol("pocoUninitializeLibrary"))
-				{
-					UninitializeLibraryFunc uninitializeLibrary = (UninitializeLibraryFunc) it->second.pLibrary->getSymbol("pocoUninitializeLibrary");
-					uninitializeLibrary();
-				}
 				delete it->second.pManifest;
-				it->second.pLibrary->unload();
-				delete it->second.pLibrary;
+				SharedLibraryLoader::instance().unloadLibrary(path);
 				_map.erase(it);
 			}
 		}
