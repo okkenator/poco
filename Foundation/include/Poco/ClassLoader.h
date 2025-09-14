@@ -22,6 +22,7 @@
 #include "Poco/MetaObject.h"
 #include "Poco/Manifest.h"
 #include "Poco/SharedLibrary.h"
+#include "Poco/SharedLibraryLoader.h"
 #include "Poco/Mutex.h"
 #include "Poco/Exception.h"
 #include <map>
@@ -51,11 +52,9 @@ class ClassLoader
 	/// library.
 {
 public:
-	using Meta = AbstractMetaObject<Base>;
-	using Manif = Manifest<Base>;
-	using InitializeLibraryFunc = void (*)();
-	using UninitializeLibraryFunc = void (*)();
-	using BuildManifestFunc = bool (*)(ManifestBase *);
+	typedef AbstractMetaObject<Base> Meta;
+	typedef Manifest<Base> Manif;
+	typedef bool (*BuildManifestFunc)(ManifestBase*);
 
 	struct LibraryInfo
 	{
@@ -63,13 +62,13 @@ public:
 		const Manif*   pManifest;
 		int            refCount;
 	};
-	using LibraryMap = std::map<std::string, LibraryInfo>;
+	typedef std::map<std::string, LibraryInfo> LibraryMap;
 
 	class Iterator
 		/// The ClassLoader's very own iterator class.
 	{
 	public:
-		using Pair = std::pair<std::string, const Manif *>;
+		typedef std::pair<std::string, const Manif*> Pair;
 
 		Iterator(const typename LibraryMap::const_iterator& it)
 		{
@@ -79,7 +78,9 @@ public:
 		{
 			_it = it._it;
 		}
-		~Iterator() = default;
+		~Iterator()
+		{
+		}
 		Iterator& operator = (const Iterator& it)
 		{
 			_it = it._it;
@@ -122,8 +123,10 @@ public:
 		mutable Pair _pair;
 	};
 
-	ClassLoader() = default;
+	ClassLoader()
 		/// Creates the ClassLoader.
+	{
+	}
 
 	virtual ~ClassLoader()
 		/// Destroys the ClassLoader.
@@ -157,15 +160,10 @@ public:
 			li.refCount  = 1;
 			try
 			{
-				li.pLibrary  = new SharedLibrary(path);
 				li.pManifest = new Manif();
+				li.pLibrary  = SharedLibraryLoader::instance().loadLibrary(path);
 				std::string pocoBuildManifestSymbol("pocoBuildManifest");
 				pocoBuildManifestSymbol.append(manifest);
-				if (li.pLibrary->hasSymbol("pocoInitializeLibrary"))
-				{
-					InitializeLibraryFunc initializeLibrary = (InitializeLibraryFunc) li.pLibrary->getSymbol("pocoInitializeLibrary");
-					initializeLibrary();
-				}
 				if (li.pLibrary->hasSymbol(pocoBuildManifestSymbol))
 				{
 					BuildManifestFunc buildManifest = (BuildManifestFunc) li.pLibrary->getSymbol(pocoBuildManifestSymbol);
@@ -178,7 +176,7 @@ public:
 			}
 			catch (...)
 			{
-				delete li.pLibrary;
+				SharedLibraryLoader::instance().unloadLibrary(path);
 				delete li.pManifest;
 				throw;
 			}
@@ -223,14 +221,8 @@ public:
 		{
 			if (--it->second.refCount == 0)
 			{
-				if (it->second.pLibrary->hasSymbol("pocoUninitializeLibrary"))
-				{
-					UninitializeLibraryFunc uninitializeLibrary = (UninitializeLibraryFunc) it->second.pLibrary->getSymbol("pocoUninitializeLibrary");
-					uninitializeLibrary();
-				}
 				delete it->second.pManifest;
-				it->second.pLibrary->unload();
-				delete it->second.pLibrary;
+				SharedLibraryLoader::instance().unloadLibrary(path);
 				_map.erase(it);
 			}
 		}

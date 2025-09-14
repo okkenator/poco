@@ -25,7 +25,7 @@ objects = ArchiveStrategy Ascii ASCIIEncoding AsyncChannel AsyncNotificationCent
 	NullStream NumberFormatter NumberParser NumericString AbstractObserver \
 	Path PatternFormatter JSONFormatter PIDFile Process ProcessRunner PurgeStrategy RWLock Random RandomStream \
 	DirectoryIteratorStrategy RegularExpression RefCountedObject Runnable RotateStrategy \
-	SHA1Engine SHA2Engine Semaphore SharedLibrary SimpleFileChannel \
+	SHA1Engine SHA2Engine Semaphore SharedLibrary SharedLibraryLoader SimpleFileChannel \
 	SignalHandler SplitterChannel SortedDirectoryIterator Stopwatch StreamChannel \
 	StreamConverter StreamCopier StreamTokenizer String StringTokenizer SynchronizedObject \
 	Task TaskManager TaskNotification TeeStream Hash HashStatistic \
