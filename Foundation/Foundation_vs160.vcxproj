@@ -1334,6 +1334,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='release_static_mt|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='release_static_mt|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="src\SharedLibraryLoader.cpp" />
     <ClCompile Include="src\SharedMemory.cpp" />
     <ClCompile Include="src\SharedMemory_DUMMY.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='debug_shared|Win32'">true</ExcludedFromBuild>
@@ -1777,6 +1778,7 @@
     <ClInclude Include="include\Poco\SharedLibrary_HPUX.h" />
     <ClInclude Include="include\Poco\SharedLibrary_UNIX.h" />
     <ClInclude Include="include\Poco\SharedLibrary_WIN32U.h" />
+    <ClInclude Include="include\Poco\SharedLibraryLoader.h" />
     <ClInclude Include="include\Poco\SharedMemory.h" />
     <ClInclude Include="include\Poco\SharedMemory_DUMMY.h" />
     <ClInclude Include="include\Poco\SharedMemory_POSIX.h" />

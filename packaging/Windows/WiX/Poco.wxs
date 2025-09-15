@@ -1143,6 +1143,7 @@
                                 <File Id="SHA1ENGINE.H" Name="SHA1Engine.h" Source="$(var.POCO)\Foundation\include\Poco\SHA1Engine.h" />
                                 <File Id="SHAREDLIBRARY.H" Name="SharedLibrary.h" Source="$(var.POCO)\Foundation\include\Poco\SharedLibrary.h" />
                                 <File Id="SHAREDLIBRARY_WIN32.H" Name="SharedLibrary_WIN32.h" Source="$(var.POCO)\Foundation\include\Poco\SharedLibrary_WIN32.h" />
+                                <File Id="SHAREDLIBRARYLOADER.H" Name="SharedLibraryLoader.h" Source="$(var.POCO)\Foundation\include\Poco\SharedLibraryLoader.h" />
                                 <File Id="SHAREDMEMORY.H" Name="SharedMemory.h" Source="$(var.POCO)\Foundation\include\Poco\SharedMemory.h" />
                                 <File Id="SHAREDMEMORY_WIN32.H" Name="SharedMemory_WIN32.h" Source="$(var.POCO)\Foundation\include\Poco\SharedMemory_WIN32.h" />
                                 <File Id="SHAREDPTR.H" Name="SharedPtr.h" Source="$(var.POCO)\Foundation\include\Poco\SharedPtr.h" />

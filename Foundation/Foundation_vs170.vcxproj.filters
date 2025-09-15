@@ -492,6 +492,9 @@
     <ClCompile Include="src\SharedLibrary_WIN32U.cpp">
       <Filter>SharedLibrary\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\SharedLibraryLoader.cpp">
+      <Filter>SharedLibrary\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\RegularExpression.cpp">
       <Filter>RegularExpression\Source Files</Filter>
     </ClCompile>
@@ -1378,6 +1381,9 @@
       <Filter>SharedLibrary\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Poco\SharedLibrary_WIN32U.h">
+      <Filter>SharedLibrary\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Poco\SharedLibraryLoader.h">
       <Filter>SharedLibrary\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Poco\RegularExpression.h">
